@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:ride_sharing/services/connectivity_service/connectivity_service.dart';
+import 'package:task/services/connectivity_service/connectivity_service.dart';
 import 'constant/app_colors.dart';
 import 'main_entry_app.dart';
 

@@ -1,15 +1,11 @@
 import 'package:get/get.dart';
-import '../../screens/about_us_screen/controller/about_us_screen_controller.dart';
 import '../../screens/app_navigation_screen/controller/app_navigation_screen_controller.dart';
-import '../../screens/privacy_policy_screen/controller/privacy_policy_screen_controller.dart';
-import '../../screens/terms_and_conditions_screen/controller/terms_and_conditions_screen_controller.dart';
+import '../../screens/user_profile_screen/controller/user_profile_controller.dart';
 
 class NavigationScreenBinding extends Bindings {
   @override
   dependencies() {
     Get.lazyPut(() => AppNavigationScreenController());
-    Get.lazyPut(() => TermsAndConditionsScreenController());
-    Get.lazyPut(() => PrivacyPolicyScreenController());
-    Get.lazyPut(() => AboutUsScreenController());
+    Get.lazyPut(() => UserProfileController());
   }
 }

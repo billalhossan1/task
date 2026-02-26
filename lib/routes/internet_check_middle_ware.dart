@@ -1,78 +1,58 @@
-import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:core_kit/utils/app_log.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../screens/error_screen/error_screen.dart';
 import '../services/connectivity_service/connectivity_service.dart';
-import 'app_routes.dart';
 
+// Simplified middleware: when there's no internet we show a SnackBar and
+// block navigation to the requested route (return null = allow the original
+// route to continue so the app never crashes into a deleted screen).
 bool _isNavigating = false;
 
 class InternetCheckMiddleWare extends GetMiddleware {
-  ConnectivityService connectivityService = Get.isRegistered<ConnectivityService>()
+  ConnectivityService connectivityService =
+      Get.isRegistered<ConnectivityService>()
       ? Get.find<ConnectivityService>()
       : Get.put<ConnectivityService>(ConnectivityService());
 
   List<ConnectivityResult> result = <ConnectivityResult>[];
+
   InternetCheckMiddleWare() {
     _onInitialData();
   }
+
   _onInitialData() {
     try {
-      // Listen to connectivity changes
-      ///////////////////// production time un-comment
-      connectivityService.connectivity.onConnectivityChanged.listen((data) async {
+      connectivityService.connectivity.onConnectivityChanged.listen((
+        data,
+      ) async {
         result = <ConnectivityResult>[];
         result.addAll(data);
-        if (data.contains(ConnectivityResult.none) && !_isNavigating && Get.currentRoute != AppRoutes.instance.errorScreen) {
+        if (data.contains(ConnectivityResult.none) && !_isNavigating) {
           _isNavigating = true;
-
-          if (AppRoutes.instance.errorScreen.isNotEmpty && Get.currentRoute != AppRoutes.instance.errorScreen) {
-            await Get.offAllNamed(AppRoutes.instance.errorScreen)?.then((value) {
-              _isNavigating = false;
-            });
-          }
+          Get.snackbar(
+            'No Internet',
+            'Please check your connection.',
+            snackPosition: SnackPosition.BOTTOM,
+            duration: const Duration(seconds: 3),
+          );
+          _isNavigating = false;
         }
       });
     } catch (e) {
-      AppLogger.error("Error== $e");
+      AppLogger.error('InternetCheckMiddleWare error: $e');
     }
   }
 
   @override
   RouteSettings? redirect(String? route) {
-    if (connectivityService.connectionStatus.contains(ConnectivityResult.none)) {
-      return RouteSettings(name: AppRoutes.instance.errorScreen);
-    }
-    // return super.redirect(route);
+    // Allow all routes — connectivity issues are shown via SnackBar.
     return null;
   }
 
   @override
-  GetPage? onPageCalled(GetPage? page) {
-    if (connectivityService.connectionStatus.contains(ConnectivityResult.none)) {
-      return GetPage(name: AppRoutes.instance.errorScreen, page: () => const ErrorScreen());
-    }
-    return super.onPageCalled(page);
-  }
-
-  @override
-  GetPageBuilder? onPageBuildStart(GetPageBuilder? page) {
-    if (connectivityService.connectionStatus.contains(ConnectivityResult.none)) {
-      return () => const ErrorScreen();
-    }
-    return super.onPageBuildStart(page);
-  }
-
-  @override
   Widget onPageBuilt(Widget page) {
-    if (connectivityService.connectionStatus.contains(ConnectivityResult.none)) {
-      return const ErrorScreen();
-    } else {
-      return super.onPageBuilt(page);
-    }
-    // return super.onPageBuilt(page);
+    return super.onPageBuilt(page);
   }
 }

@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:core_kit/core_kit.dart';
-import '../../routes/app_routes.dart';
 
 class ConnectivityService extends GetxController {
   RxList<ConnectivityResult> connectionStatus = <ConnectivityResult>[].obs;
@@ -15,11 +14,13 @@ class ConnectivityService extends GetxController {
     try {
       List<ConnectivityResult> result = await connectivity.checkConnectivity();
       _updateConnectionStatus(result);
-      connectivitySubscription = connectivity.onConnectivityChanged.listen((event) {
+      connectivitySubscription = connectivity.onConnectivityChanged.listen((
+        event,
+      ) {
         _updateConnectionStatus(event);
       });
     } on PlatformException catch (e) {
-      AppLogger.error("Error==$e" );
+      AppLogger.error("Error==$e");
     }
   }
 
@@ -28,14 +29,10 @@ class ConnectivityService extends GetxController {
       connectionStatus.value = result;
       connectionStatus.refresh();
       if (result.contains(ConnectivityResult.none)) {
-        Future.microtask(() {
-          if (Get.isRegistered<GetMaterialApp>()) {
-            Get.offAllNamed(AppRoutes.instance.errorScreen);
-          }
-        });
+        // Connectivity loss is handled by InternetCheckMiddleWare via SnackBar.
       }
     } catch (e) {
-      AppLogger.error("Error==$e" );
+      AppLogger.error("Error==$e");
     }
   }
 

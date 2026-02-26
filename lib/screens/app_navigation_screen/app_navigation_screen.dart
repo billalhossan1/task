@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../app_all_enum/app_login_status.dart';
+import 'package:task/constant/app_colors.dart';
+import 'package:task/screens/product_listing_screen/controller/product_listing_controller.dart';
+import 'package:task/screens/product_listing_screen/product_listing_screen.dart';
+import 'package:task/screens/user_profile_screen/user_profile_screen.dart';
 import 'controller/app_navigation_screen_controller.dart';
 
 class AppNavigationScreen extends StatelessWidget {
@@ -14,9 +16,36 @@ class AppNavigationScreen extends StatelessWidget {
       builder: (controller) {
         return Scaffold(
           extendBody: true,
-          body: IndexedStack(index: controller.selectedIndex.value, children: selectedAppUserType == AppUserType.user ? [] : []),
-
-          bottomNavigationBar: BottomNavigationBar(onTap: controller.changeIndex, items: selectedAppUserType == AppUserType.user ? [] : []),
+          body: IndexedStack(
+            index: controller.selectedIndex.value,
+            children: [
+              GetBuilder<ProductListingController>(
+                init: ProductListingController(),
+                builder: (_) => const ProductListingScreen(),
+              ),
+              const UserProfileScreen(),
+            ],
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            onTap: controller.changeIndex,
+            currentIndex: controller.selectedIndex.value,
+            selectedItemColor: AppColors.instance.primary500,
+            unselectedItemColor: AppColors.instance.dark300,
+            backgroundColor: AppColors.instance.white,
+            type: BottomNavigationBarType.fixed,
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.store_outlined),
+                activeIcon: Icon(Icons.store),
+                label: 'Shop',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person_outline),
+                activeIcon: Icon(Icons.person),
+                label: 'Profile',
+              ),
+            ],
+          ),
         );
       },
     );
