@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ride_sharing/constant/app_api_end_point.dart';
-import 'package:ride_sharing/constant/app_constant.dart';
-import 'package:ride_sharing/routes/app_routes.dart';
-import 'package:ride_sharing/routes/app_routes_file.dart';
-import 'package:ride_sharing/screens/error_screen/error_screen.dart';
-import 'package:ride_sharing/services/share_pref_helper/share_pref_helper.dart';
-import 'package:ride_sharing/utils/app_theme.dart';
+import 'package:task/constant/app_api_end_point.dart';
+import 'package:task/routes/app_routes.dart';
+import 'package:task/routes/app_routes_file.dart';
+import 'package:task/services/share_pref_helper/share_pref_helper.dart';
+import 'package:task/utils/app_theme.dart';
 import 'package:core_kit/core_kit.dart';
 
 GlobalKey<NavigatorState>? appNavigatorStateKey = GlobalKey<NavigatorState>();

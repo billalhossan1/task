@@ -5,7 +5,6 @@ import '../../../routes/app_routes.dart';
 import '../../../utils/error_log.dart';
 
 class SplashScreenController extends GetxController {
-  ////////////  object
   RxDouble animation = 0.0.obs;
   RxDouble animation2 = 0.0.obs;
 
@@ -16,19 +15,14 @@ class SplashScreenController extends GetxController {
         animation2.value = 1.0;
       });
 
-      // bool value =await SharePrefsHelper.getBool(SharedPreferenceValue.isOnboarding)??false;
-      Future.delayed(Duration(seconds: 3), () {
-      //   if (value) {
-          Get.offAllNamed(AppRoutes.instance.onBoardingScreen);
-        // } else {
-        //   Get.offAllNamed(AppRoutes.instance.wellCome);
-        // }
-      }
-      );
+      // Navigate directly to the main app — no login required.
+      Future.delayed(const Duration(seconds: 3), () {
+        Get.offAllNamed(AppRoutes.instance.appNavigationScreen);
+      });
     } catch (e) {
-      errorLog("onInitialDataLoadScreen", e);
+      errorLog('onInitialDataLoadScreen', e);
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        Get.offAllNamed(AppRoutes.instance.errorScreen);
+        Get.offAllNamed(AppRoutes.instance.appNavigationScreen);
       });
     }
   }
